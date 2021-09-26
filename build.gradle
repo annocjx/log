@@ -1,0 +1,307 @@
+// Top-level build file where you can add configuration options common to all sub-projects/modules.
+
+buildscript {
+    ext.kotlin_version = '1.5.10'
+    repositories {
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        google()
+        //jcenter()
+        maven { url "https://dl.bintray.com/prototypez/maven/" }
+        maven { url "http://jcenter.bintray.com" }
+        maven { url '../repo' }
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:4.2.2'
+        // NOTE: Do not place your application dependencies here; they belong
+        // in the individual module build.gradle files
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.0'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // GitHub Maven 插件
+        classpath "com.github.dcendents:android-maven-gradle-plugin:2.1"
+        //组件化框架
+        classpath 'io.github.prototypez:app-joint:latest.integration'
+
+        //classpath "com.novoda:bintray-release:0.8.1"
+    }
+}
+
+allprojects {
+    repositories {
+        maven {
+            url "../repo"
+        }
+        maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+        maven { url 'http://maven.aliyun.com/nexus/content/repositories/jcenter' }
+        maven { url "http://jcenter.bintray.com" }
+        google()
+        //jcenter()
+
+        maven { url '../../repo' }
+        maven { url '../../../repo' }
+    }
+
+    configurations {
+        cleanedAnnotations
+        compile.exclude group: 'org.jetbrains' , module:'annotations'
+        compile.exclude group: 'stax' , module:'stax'
+    }
+
+    tasks.withType(Javadoc) {
+        options.addStringOption('Xdoclint:none', '-quiet')
+        options.addStringOption('encoding', 'UTF-8')
+    }
+}
+
+configurations.all {
+    resolutionStrategy {
+        force "com.android.support:appcompat-v7:27.1.1"
+        force "com.android.support:support-v4:28.0.0"
+        force "com.android.support:design:27.1.1"
+    }
+}
+tasks.withType(Javadoc) {
+    options {
+        encoding "UTF-8"
+        charSet 'UTF-8'
+        links "http://docs.oracle.com/javase/7/docs/api"
+    }
+}
+
+
+task clean(type: Delete) {
+    delete rootProject.buildDir
+}
+apply from: rootProject.getRootDir().getAbsolutePath() + "/config.gradle"
+
+
+/*
+    //强制使用版本的示例
+    subprojects {
+        project.configurations.all {
+            resolutionStrategy.eachDependency { details ->
+                if (details.requested.group == 'com.android.support'
+                        && !details.requested.name.contains('multidex')) {
+                    details.useVersion "${versions.support}"
+                }
+            }
+        }
+    }
+    */
+//
+////为每个子Project加载utils.gradle 。当然，这句话可以放到buildscript花括号之后
+//apply from: rootProject.getRootDir().getAbsolutePath() + "/utils.gradle"
+//apply from: rootProject.getRootDir().getAbsolutePath() + "/test.gradle"
+//apply from: rootProject.getRootDir().getAbsolutePath() + "/GroovyTest.gradle"
+//
+//
+//tasks.withType(JavaCompile) {
+//    //指定使用utf-8编码
+//    options.encoding = "UTF-8"
+//    //指定编译的jdk版本
+//    //sourceCompatibility = JavaVersion.VERSION_1_8
+//    // targetCompatibility = JavaVersion.VERSION_1_8
+//}
+//
+//println "from config  " + this.compileSdkVersion
+//
+//def excuted = false
+//def index = 0;
+//task('test1', {
+//    //println "svn --version".execute().text.trim()
+//    //println "javah -v".execute().text.trim()//显示空行
+//
+//    if (!excuted) {
+//        println "test1执行{$index}++"
+//        apply
+//    } else {
+//        excuted = true;
+//    }
+//
+//    def workDir = "H:\\Desktop"
+//    "javac -d . ${++index + ""}.java".execute([], new File(workDir))
+//})
+//
+//
+//def sign() {
+//    println "sign执行"
+//    //设置命令执行结果的输出的地方
+//    def out = new ByteArrayOutputStream()
+//    //通过 exec {} 方式来执行命令
+//    exec {
+//        workingDir "H:\\Desktop\\Rx"
+//        commandLine 'cmd', '/c', 'dir'
+//        //修改命令输出的地方，默认为控制台
+//        standardOutput = out
+//    }
+//    //将命令的执行结果作为方法的返回值
+//    return out
+//}
+//
+//task copyTest(type: Copy) {
+//    from "H:\\Desktop\\Rx\\README.md"
+//    into "H:\\Desktop"
+//    // 调用 rename 方法
+//    rename { String fileName ->
+//        fileName = "README1.md"
+//    }
+//}
+//task sign4(type: Exec) {
+//    println "$it sign4 开始执行"
+//    group = help
+//    //设置工作路径
+//    workingDir "H:\\Desktop\\cx"
+//
+//    //执行 dir命令， /c 表示 cmd窗口执行完 dir 命令后立即关掉，至于 cmd 后可带哪些参数，可在终端下 cmd /? 查看
+//    commandLine 'cmd', '/c', 'dir'
+//
+//    //执行 java -version 命令
+//    //commandLine 'java', '-version'
+//
+//    //执行 svn --version 命令
+//    //commandLine 'svn', '--version'
+//
+//    //执行 adb devices 命令
+//    //commandLine 'cmd', '/c', 'adb devices'
+//    ByteArrayOutputStream ous = sign()
+//    println(ous.toString())
+//    gTest
+//    println "sign4执行完毕"
+//    doFirst {
+//        println '*** task sign4 doFirst'
+//    }
+//    doLast {
+//        println '*** task sign4 doLast'
+//    }
+//}
+//
+//// 这个类可以放到当前 build.gradle 文件中，也可以放到单独的 gradle 文件中，也可以放到插件的 java 或者 groovy 文件中。
+//class TestTask extends DefaultTask {
+//    String source
+//
+//    @TaskAction
+//    void testAction() {
+//        println getName() + " ### testAction!"
+//    }
+//
+//    void testMothod(String para) {
+//        println "Source is " + source + " para = " + para
+//    }
+//}
+//
+//task testTask(type: TestTask) {
+//    source "MyApplication"
+//    testMothod "test"
+//    doLast {
+//        println 'GoodBye'
+//    }
+//}
+//
+////设置不被执行
+//testTask.enabled = false
+//
+///*
+//UP - TO - DATE 原理
+//当一个任务是首次执行时，Gradle 会取一个输入的快照 (snapshot)。该快照包含组输入文件和每个文件的内容的散列。
+//然后当 Gradle 执行任务时，如果任务成功完成，Gradle 会获得一个输出的快照。该快照包含输出文件和每个文件的
+//内容的散列。Gradle 会保留这两个快照用来在该任务的下一次执行时进行判断。
+//之后，每次在任务执行之前，Gradle 都会为输入和输出取一个新的快照，如果这个快照和之前的快照一样 ，
+//Gradle 就会假定这个任务已经是最新的 (up-to-date) 并且跳过任务，反之亦然。
+//需要注意的是，如果一个任务有指定的输出目录，自从该任务上次执行以来被加入到该目录的任务文件都会被忽略，
+//并且不会引起任务过时 (out of date)。这是因为不相关任务也许会共用同一个输出目录。如果这并不是你所想要的情况，
+//可以考虑使用 TaskOutputs.upToDateWhen()
+//*/
+//
+////Gradle Project生命周期
+////Project
+////beforeEvaluate()是在 project 开始配置前调用，当前的 project 作为参数传递给闭包,只在父project中有效
+//this.project.subprojects { sub ->
+//    sub.beforeEvaluate {
+//        project
+//        println "####1 Evaluate before of " + project.path
+//    }
+//}
+////或者用 Action 作为参数的方法：
+//this.project.subprojects { sub ->
+//    sub.beforeEvaluate(new Action<Project>() {
+//        @Override
+//        void execute(Project project) {
+//            println "####2 Evaluate before of " + project.path
+//        }
+//    })
+//}
+////只要 project 配置成功均会调用，不论是在父模块还是子模块。参数类型以及写法与afterEvaluate相同：
+//project.afterEvaluate { pro ->
+//    println("$this ####1 Evaluate after of " + pro.path)
+//}
+//
+//
+////Gradle
+////project配置前执行
+//gradle.beforeProject { p ->
+//    println("Evaluation3 beforeProject" + p)
+//}
+////project配置完成后立即执行
+//this.getGradle().afterProject { project, projectState ->
+//    if (projectState.failure) {
+//        println "Evaluation2 afterProject of " + project + " FAILED"
+//    } else {
+//        println "Evaluation3 afterProject of " + project + " succeeded"
+//    }
+//}
+////构建结束的回调
+//gradle.buildFinished { r ->
+//    println("buildFinished " + r.failure)
+//}
+//
+////所有的 project 都配置完成后的回调，此时，所有的project都已经配置完毕，准备开始生成 task 图。gradle 对象会作为参数传递给闭包。
+//gradle.projectsEvaluated { gradle ->
+//    println("----> all projects Evaluated")
+//}
+//
+////addProjectEvaluationListener:设置接口监听添加回调来实现。作用的对象均是所有的 project 实现。
+////gradle.addProjectEvaluationListener(new ProjectEvaluationListener() {})
+//
+//
+////自定义插件
+///*Gradle 的插件可以有三种形式来提供：
+//
+//直接在build.gradle中编写 Plugin，这种方式这种方法写的Plugin无法被其他 build.gradle 文件引用。
+//单独的一个Module，这个Module的名称必须为buildSrc，同一个工程中所有的构建文件够可以引用这个插件，但是不能被其他工程引用。
+//在一个项目中自定义插件，然后上传到远端maven库等，其他工程通过添加依赖，引用这个插件。
+//*/
+//
+//class CustomExtension {
+//    String msg
+//}
+//
+//class CustomPlugin implements Plugin<Project> {
+//    @Override
+//    void apply(Project target) {
+//        // 创建一个扩展属性 myExtension，使用 CustomExtension 进行管理外部属性配置
+//        target.extensions.create("myExtension", CustomExtension)
+//        // 实现一个名称为testPluginTask1的task，设置分组为 myPlugin，并设置描述信息
+//        target.task('testPluginTask1', group: "myPlugin", description: "This is my test plugin") {
+//            doLast {
+//                println "## This is my first gradle plugin in testPlugin task. msg = " + target.myExtension.msg
+//            }
+//        }
+//        // 实现一个名称为testPluginTask2的task，设置分组为 myPlugin，并设置描述信息
+//        target.task('testPluginTask2', group: "myPlugin", description: "This is my test plugin") {
+//            doLast {
+//                println "## This is my first gradle plugin in testPlugin task. msg = " + target.myExtension.msg
+//            }
+//            println "** This is my first gradle plugin. msg = " + target.myExtension.msg
+//        }
+//
+//    }
+//}
+//
+//apply plugin: CustomPlugin
+//myExtension
+//        {
+//            msg "testMSG"
+//        }
+//
+//

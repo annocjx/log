@@ -1,0 +1,29 @@
+//include ':app'
+// ':watcher', ':mifm', ':gradleplugintest', ':buildSrc', ':statusbar', ':jni', ':lsv',
+//include  ':picker'
+//include ":watcher"
+//java测试
+//include  ':java'
+//文件浏览器
+//include ':mifm'
+//日志
+include  ':log'
+//邮件服务
+//include ':email'
+//组件化
+//include ':standalone:email_alone'
+//组件化单元
+//include ':router', ':appBase'
+/*生命周期回调的执行顺序是
+
+gradle.settingsEvaluated->
+gradle.projectsLoaded->
+gradle.beforeProject->
+project.beforeEvaluate->
+gradle.afterProject->
+project.afterEvaluate->
+gradle.projectsEvaluated->
+gradle.taskGraph.graphPopulated->
+gradle.taskGraph.whenReady->
+gradle.buildFinished*/
+

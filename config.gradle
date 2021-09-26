@@ -1,0 +1,10 @@
+ext {
+    compileSdkVersion = 28
+    buildToolsVersion = '28.0.2'
+    compileSdkVersion = 28
+    applicationId = "com.mapsoft.samples"
+    minSdkVersion = 19
+    targetSdkVersion = 28
+    versionCode = 20190310
+    versionName = "19.03.10"
+}
